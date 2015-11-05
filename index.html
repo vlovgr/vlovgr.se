@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Viktor Rudebeck</title>
+  <style>
+    @font-face {
+      font-family: "Socicon";
+      src: url("fonts/Socicon.eot?87visu");
+      src: url("fonts/Socicon.eot?87visu#iefix") format("embedded-opentype"),
+        url("fonts/Socicon.woff2?87visu") format("woff2"),
+        url("fonts/Socicon.ttf?87visu") format("truetype"),
+        url("fonts/Socicon.woff?87visu") format("woff"),
+        url("fonts/Socicon.svg?87visu#Socicon") format("svg");
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    .background {
+      background: url(images/background.jpg) no-repeat 50% / cover;
+      height: 100%;
+      position: fixed;
+      width: 100%;
+    }
+
+    .background > .overlay {
+      background: #000;
+      height: 100%;
+      opacity: 0.65;
+      width: 100%;
+    }
+
+    .content {
+      display: table;
+      height: 100%;
+      padding: 40px 0;
+      position: absolute;
+      width: 100%;
+    }
+
+    .content > .centered {
+      display: table-cell;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .icon {
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
+      font-family: "Socicon" !important;
+      font-size: 20px;
+      font-style: normal;
+      font-variant: normal;
+      font-weight: normal;
+      line-height: 1;
+      speak: none;
+      text-transform: none;
+    }
+
+    .icon-linkedin:before {
+      content: "\e04c";
+    }
+
+    .icon-github:before {
+      content: "\e032";
+    }
+
+    body {
+      line-height: 1.15;
+      margin: 0;
+    }
+
+    h1 {
+      color: #fff;
+      font: 700 54px/1.2 system-ui, sans-serif;
+      margin: 0.67em 0;
+    }
+
+    h2 {
+      color: #eee;
+      font: 22px/1.4 system-ui, sans-serif;
+      margin: 28px auto 0;
+      max-width: 550px;
+      padding: 0 10px;
+    }
+
+    h2 > a {
+      color: #eee;
+      text-decoration: none;
+    }
+
+    h2 > a:hover {
+      text-decoration-skip: ink;
+      text-decoration: underline;
+    }
+
+    img {
+      border-radius: 100%;
+    }
+
+    ul {
+      list-style: none;
+      margin-bottom: 0;
+      margin-top: 18px;
+      padding: 0;
+    }
+
+    ul > li {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 0 6px;
+      width: 49px;
+    }
+
+    ul > li > a {
+      background: #fff;
+      border-radius: 100%;
+      color: #666;
+      display: block;
+      padding: 11px 11px 9px;
+      text-decoration: none;
+      transition: all 0.14s ease-in-out;
+    }
+
+    ul > li > a:hover {
+      background: #ccc;
+      color: #444;
+    }
+  </style>
+
+  <body>
+    <div class="background">
+      <div class="overlay"></div>
+    </div>
+    <div class="content">
+      <div class="centered">
+        <img srcset="images/picture.jpg, images/picture@2x.jpg 2x,
+        images/picture@3x.jpg 3x" src=images/picture.jpg width=180 height=180
+        alt="Viktor Rudebeck">
+        <h1>Viktor Rudebeck</h1>
+        <h2>
+          Lead Software Engineer at
+          <a href="https://maginepro.com">Magine</a>
+          in Stockholm. Enthusiastic about functional programming and Scala.
+        </h2>
+        <ul>
+          <li>
+            <a href="https://linkedin.com/in/vlovgr" title="LinkedIn">
+              <i class="icon icon-linkedin"></i>
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/vlovgr" title="GitHub">
+              <i class="icon icon-github"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
