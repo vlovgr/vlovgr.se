@@ -1,162 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Viktor Rudebeck</title>
-  <style>
-    @font-face {
-      font-family: "Socicon";
-      src: url("fonts/Socicon.eot?87visu");
-      src: url("fonts/Socicon.eot?87visu#iefix") format("embedded-opentype"),
-        url("fonts/Socicon.woff2?87visu") format("woff2"),
-        url("fonts/Socicon.ttf?87visu") format("truetype"),
-        url("fonts/Socicon.woff?87visu") format("woff"),
-        url("fonts/Socicon.svg?87visu#Socicon") format("svg");
-      font-weight: normal;
-      font-style: normal;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    .background {
-      background: url(images/background.jpg) no-repeat 50% / cover;
-      height: 100%;
-      position: fixed;
-      width: 100%;
-    }
+    <link rel="icon" href="favicon.svg" />
+    <link rel="stylesheet" type="text/css" href="neat.css" />
+    <link rel="stylesheet" type="text/css" href="custom.css" />
 
-    .background > .overlay {
-      background: #000;
-      height: 100%;
-      opacity: 0.65;
-      width: 100%;
-    }
-
-    .content {
-      display: table;
-      height: 100%;
-      padding: 40px 0;
-      position: absolute;
-      width: 100%;
-    }
-
-    .content > .centered {
-      display: table-cell;
-      text-align: center;
-      vertical-align: middle;
-    }
-
-    .icon {
-      -moz-osx-font-smoothing: grayscale;
-      -webkit-font-smoothing: antialiased;
-      font-family: "Socicon" !important;
-      font-size: 20px;
-      font-style: normal;
-      font-variant: normal;
-      font-weight: normal;
-      line-height: 1;
-      speak: none;
-      text-transform: none;
-    }
-
-    .icon-linkedin:before {
-      content: "\e04c";
-    }
-
-    .icon-github:before {
-      content: "\e032";
-    }
-
-    body {
-      line-height: 1.15;
-      margin: 0;
-    }
-
-    h1 {
-      color: #fff;
-      font: 700 54px/1.2 system-ui, sans-serif;
-      margin: 0.67em 0;
-    }
-
-    h2 {
-      color: #eee;
-      font: 22px/1.4 system-ui, sans-serif;
-      margin: 28px auto 0;
-      max-width: 550px;
-      padding: 0 10px;
-    }
-
-    h2 > a {
-      color: #eee;
-      text-decoration: none;
-    }
-
-    h2 > a:hover {
-      text-decoration-skip: ink;
-      text-decoration: underline;
-    }
-
-    img {
-      border-radius: 100%;
-    }
-
-    ul {
-      list-style: none;
-      margin-bottom: 0;
-      margin-top: 18px;
-      padding: 0;
-    }
-
-    ul > li {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 0 6px;
-      width: 49px;
-    }
-
-    ul > li > a {
-      background: #fff;
-      border-radius: 100%;
-      color: #666;
-      display: block;
-      padding: 11px 11px 9px;
-      text-decoration: none;
-      transition: all 0.14s ease-in-out;
-    }
-
-    ul > li > a:hover {
-      background: #ccc;
-      color: #444;
-    }
-  </style>
-
+    <title>Viktor Rudebeck</title>
+  </head>
   <body>
-    <div class="background">
-      <div class="overlay"></div>
-    </div>
-    <div class="content">
-      <div class="centered">
-        <img srcset="images/picture.jpg, images/picture@2x.jpg 2x,
-        images/picture@3x.jpg 3x" src=images/picture.jpg width=180 height=180
-        alt="Viktor Rudebeck">
-        <h1>Viktor Rudebeck</h1>
-        <h2>
-          Lead Software Engineer at
-          <a href="https://maginepro.com">Magine</a>
-          in Stockholm. Enthusiastic about functional programming and Scala.
-        </h2>
-        <ul>
-          <li>
-            <a href="https://linkedin.com/in/vlovgr" title="LinkedIn">
-              <i class="icon icon-linkedin"></i>
-            </a>
-          </li>
-          <li>
-            <a href="https://github.com/vlovgr" title="GitHub">
-              <i class="icon icon-github"></i>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <a class="home" href="">&nwarrow;</a>
+
+    <h1>Viktor Rudebeck</h1>
+
+    <p>
+      Lead Software Engineer at
+      <a href="https://www.maginepro.com">Magine Pro</a> in Stockholm.<br />
+      Enthusiastic about functional programming and
+      <a href="https://www.scala-lang.org">Scala</a>.
+    </p>
+
+    <p>
+      Reach me by <a href="mailto:hello@vlovgr.se">email</a> or find me on
+      <a href="https://github.com/vlovgr">GitHub</a> and
+      <a href="https://linkedin.com/in/vlovgr">LinkedIn</a>.
+    </p>
+
+    <h2 id="projects">Projects</h2>
+
+    <p>
+      I'm active in the <a href="https://www.nushell.sh">Nushell</a> and
+      <a href="https://typelevel.org">Typelevel</a> Scala ecosystems.
+    </p>
+
+    <h3 id="nushell">Nushell</h3>
+
+    <ul>
+      <li>
+        <a href="https://github.com/vlovgr/nu-shiki">nu-shiki</a> is a script to
+        generate images of terminal commands.
+      </li>
+    </ul>
+
+    <h3 id="scala">Scala</h3>
+
+    <ul>
+      <li>
+        <a href="https://github.com/maginepro/aws-regions">aws-regions</a> is a
+        micro library for working with AWS regions.
+      </li>
+      <li>
+        <a href="https://cir.is/">ciris</a> is a functional library for
+        composable configuration loading.
+      </li>
+      <li>
+        <a href="https://fd4s.github.io/fs2-kafka">fs2-kafka</a> is a functional
+        <a href="https://kafka.apache.org">Kafka</a> client based on the
+        <a href="https://fs2.io">fs2</a> library.
+      </li>
+      <li>
+        <a href="https://github.com/maginepro/http4s-aws">http4s-aws</a> is a
+        library for signed AWS API requests for
+        <a href="https://http4s.org">http4s</a>.
+      </li>
+      <li>
+        <a href="https://github.com/maginepro/http4s-karapace"
+          >http4s-karapace</a
+        >
+        is an http4s client for the
+        <a href="https://www.karapace.io">Karapace</a> schema registry.
+      </li>
+      <li>
+        <a href="https://github.com/maginepro/spies">spies</a> is a functional
+        <a href="https://memcached.org">Memcached</a> client based on
+        <a href="https://typelevel.org/cats-effect">cats-effect</a>.
+      </li>
+      <li>
+        <a href="https://fd4s.github.io/vulcan">vulcan</a> is a library for
+        functional Apache <a href="https://avro.apache.org">Avro</a> codecs.
+      </li>
+    </ul>
+
+    <h2 id="talks">Talks</h2>
+
+    <ul>
+      <li>
+        2018-12-13
+        <a href="https://github.com/vlovgr/ciris-functional-configurations"
+          >Ciris: Functional Configurations</a
+        >
+      </li>
+      <li>
+        2018-05-23
+        <a href="https://github.com/vlovgr/actors-cats-effect-fs2">
+          Replacing Akka Actors with Cats Effect and FS2</a
+        >
+      </li>
+      <li>
+        2017-06-03
+        <a href="https://github.com/vlovgr/refined-types"
+          >Refined Types for Validated Configurations</a
+        >
+      </li>
+    </ul>
   </body>
 </html>
