@@ -22,7 +22,7 @@ jobs:
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
       - name: Ignore files
-        run: rm package.json package-lock.json
+        run: rm package.json package-lock.json readme.md
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
