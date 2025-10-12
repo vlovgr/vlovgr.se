@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="stylesheet" type="text/css" href="/neat.css" />
+    <link rel="stylesheet" type="text/css" href="/custom.css" />
+
+    <title>Generating Images of Nushell Commands</title>
+  </head>
+  <body>
+    <a class="home" href="/">&nwarrow;</a>
+
+    <h1>Generating Images of Nushell Commands</h1>
+
+    <i>Published on October 13, 2025.</i>
+
+    <p>
+      <em>Summary:</em> I've written a small
+      <a href="https://github.com/vlovgr/nu-shiki">nu-shiki</a> script for
+      generating nice images of
+      <a href="https://www.nushell.sh">Nushell</a> commands with their outputs.
+      It can also be used to render images of code in any language supported by
+      <a href="https://shiki.style">Shiki</a>. It's useful when sharing images
+      of code is the best available option.
+    </p>
+
+    <div class="separator"></div>
+
+    <p>
+      For the longest time, Linux shell scripting felt
+      <em>annoying</em> to me. I was able to use Bash, Zsh and Fish to achieve
+      my goals, but they always left me with a bad feeling. Since I'm quite
+      enthusiastic about functional programming, I was more than happy when a
+      colleague told me about <a href="https://www.nushell.sh">Nushell</a> back
+      in January 2024. I played around with it the same day, and have been using
+      it daily since then.
+    </p>
+
+    <p>Personally, Nushell feels like the perfect mixture:</p>
+
+    <ul>
+      <li>a functional programming language with gradual typing,</li>
+      <li>the ability to use that language both in scripts and a shell,</li>
+      <li>passing structured data between functions (like PowerShell),</li>
+      <li>with proper IDE support and really nice error messages, and</li>
+      <li>while being cross-platform with a lot of batteries included.</li>
+    </ul>
+
+    <p>
+      <a href="https://www.sophiajt.com/case-for-nushell/"
+        >The case for Nushell</a
+      >
+      goes more in-depth and is worth reading.
+    </p>
+
+    <p>
+      In February 2024, about a month after first discovering Nushell, more
+      people in my team at work got excited and started to develop tooling in
+      Nushell. At this point, we had ~3&nbsp;000 lines of tools written in Bash.
+      By the end of the year, in just 10 months, we had rewritten all tooling in
+      Nushell and the new versions worked really well. (This is the topic for a
+      separate post.)
+    </p>
+
+    <p>
+      There's a fairly frequent need within the team to share Nushell commands
+      and outputs. Nushell renders structured data really nicely. Following is
+      an example of a random table (essentially a list containing records, which
+      usually share some structure).
+    </p>
+
+    <img
+      width="566"
+      height="144"
+      alt="screenshot"
+      src="/posts/nu-shiki/table.png"
+    />
+
+    <p>
+      The company uses Slack for internal communication, and that is where most
+      commands and outputs are being shared. This is how that same table looks
+      like when shared as a code block.
+    </p>
+
+    <img
+      width="579"
+      height="170"
+      alt="screenshot"
+      src="/posts/nu-shiki/slack1.png"
+    />
+
+    <p>
+      No syntax highlighting, but otherwise passable. But check what happens
+      when the width is constrained, like in sidebar threads.
+    </p>
+
+    <img
+      width="355"
+      height="314"
+      alt="screenshot"
+      src="/posts/nu-shiki/slack2.png"
+    />
+
+    <p>
+      Snippets help a bit, since you can download them, but they still render
+      poorly in sidebars.
+    </p>
+
+    <img
+      width="355"
+      height="439"
+      alt="screenshot"
+      src="/posts/nu-shiki/slack3.png"
+    />
+
+    <p>
+      Since I run Slack in the browser, I added some custom CSS to improve the
+      situation a bit.
+    </p>
+
+    <img
+      width="247"
+      height="99"
+      alt="screenshot"
+      src="/posts/nu-shiki/output1.png"
+    />
+
+    <p>
+      At least code blocks are readable now, but with a scrollbar in sidebar
+      threads.
+    </p>
+
+    <img
+      width="355"
+      height="185"
+      alt="screenshot"
+      src="/posts/nu-shiki/slack4.png"
+    />
+
+    <p>
+      The team largely resorted to screenshots. Usually, there isn't a need to
+      copy the command or the output (you're just trying to convey some
+      information), so the lack of text isn't that problematic. But screenshots
+      would always end up looking a bit messy, which was sometimes distracting.
+    </p>
+
+    <p>
+      Personally, I wanted something better fit for the purpose, so I started
+      developing <a href="https://github.com/vlovgr/nu-shiki">nu-shiki</a>. The
+      idea is fairly simple: instead of taking a screenshot of the terminal,
+      render a command and it's output with
+      <a href="https://en.wikipedia.org/wiki/ANSI_escape_code"
+        >ANSI escape codes</a
+      >. Then let <a href="https://shiki.style">Shiki</a> generate matching
+      HTML, and take a screenshot of it.
+    </p>
+
+    <p>
+      Luckily, there's already a <code>nu-highlight</code> command for syntax
+      highlighting commands, and a <code>table</code> command for syntax
+      highlighting outputs. Shiki can be run in Node and the
+      <a href="https://www.npmjs.com/package/capture-website"
+        >capture-website</a
+      >
+      library can be used to take a screenshot. The rest is mostly formatting
+      and plumbing to make it work.
+    </p>
+
+    <h2 id="getting-started">Getting Started</h2>
+
+    <p>
+      Start by following the
+      <a href="https://github.com/vlovgr/nu-shiki?tab=readme-ov-file#setup"
+        >setup instructions</a
+      >. If you only want to show the <em>output</em>, pipe it to
+      <code>nu-shiki</code> and you should get a
+      <code>~/Downloads/screenshot.png</code> file generated for you. For
+      example, you might run the following command:
+    </p>
+
+    <img
+      width="471"
+      height="72"
+      alt="screenshot"
+      src="/posts/nu-shiki/command2.png"
+    />
+
+    <p>and get the following generated image.</p>
+
+    <img
+      width="254"
+      height="114"
+      alt="screenshot"
+      src="/posts/nu-shiki/output2.png"
+    />
+
+    <p>
+      It's also possible to show the command in the image by passing it
+      explicitly:
+    </p>
+
+    <img
+      width="484"
+      height="36"
+      alt="screenshot"
+      src="/posts/nu-shiki/command3.png"
+    />
+
+    <p>which then renders the following image.</p>
+
+    <img
+      width="396"
+      height="129"
+      alt="screenshot"
+      src="/posts/nu-shiki/output3.png"
+    />
+
+    <p>
+      If you have a long pipeline, the <code>--format</code> option can format
+      it for you.
+    </p>
+
+    <img
+      width="599"
+      height="204"
+      alt="screenshot"
+      src="/posts/nu-shiki/format.png"
+    />
+
+    <p>
+      Using the <code>--lang</code> option, it is also possible to render code
+      in any language supported by Shiki. For example, the CSS image earlier in
+      the post was generated with the following command. The full
+      <a href="https://shiki.style/languages">list of supported languages</a> is
+      available on the Shiki website.
+    </p>
+
+    <img
+      width="247"
+      height="99"
+      alt="screenshot"
+      src="/posts/nu-shiki/command1.png"
+    />
+
+    <h2 id="development-notes">Development Notes</h2>
+
+    <p>
+      I experimented with <code>nu -c</code> (similar to <code>eval</code> in
+      Bash) to pass the command as a <code>string</code> and then evaluate it.
+      Unfortunately, there were some issues and disadvantages with this
+      approach, which meant there was a case to pass the command and output
+      separately.
+    </p>
+
+    <ul>
+      <li>
+        Syntax highlighting did not work properly (<code>nu -c</code> returns a
+        byte stream).
+      </li>
+      <li>
+        Certain commands output intermediate text you might want to ignore.
+      </li>
+      <li>
+        There are commands which output text to <code>stderr</code> you want to
+        show.
+      </li>
+      <li>Sometimes you want to tweak the output slightly for readability.</li>
+    </ul>
+
+    <h2 id="final-words">Final Words</h2>
+
+    <p>
+      Hopefully you find
+      <a href="https://github.com/vlovgr/nu-shiki">nu-shiki</a> useful. Let me
+      know if you spot any mistakes!
+    </p>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+  <channel>
+    <title>Viktor Rudebeck</title>
+    <link>https://vlovgr.se</link>
+    <description>Posts by Viktor Rudebeck</description>
+
+    <item>
+      <title>Generating Images of Nushell Commands</title>
+      <link>https://vlovgr.se/posts/nu-shiki</link>
+      <description>I've written a small
+      <a href="https://github.com/vlovgr/nu-shiki">nu-shiki</a> script for
+      generating nice images of
+      <a href="https://www.nushell.sh">Nushell</a> commands with their outputs.
+      It can also be used to render images of code in any language supported by
+      <a href="https://shiki.style">Shiki</a>. It's useful when sharing images
+      of code is the best available option.</description>
+    </item>
+  </channel>
+</rss>

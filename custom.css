@@ -1,3 +1,10 @@
 body {
   max-width: 740px;
 }
+
+.separator {
+  border-bottom: 0.125em solid;
+  margin-bottom: 2em;
+  margin-top: 2em;
+  width: 4em;
+}
