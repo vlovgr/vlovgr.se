@@ -219,15 +219,55 @@
     >
 
     <p>
-      If you have a long pipeline, the <code>--format</code> option can format
-      it for you.
+      An alternative to this approach is to use <code>--eval</code> on a command
+      string:
     </p>
 
     <img
-      width="599"
-      height="204"
+      width="518"
+      height="39"
       alt="screenshot"
-      src="/posts/nu-shiki/format.png"
+      src="/posts/nu-shiki/command4.png"
+    >
+
+    <p>and the command will be evaluated for its output.</p>
+
+    <img
+      width="396"
+      height="129"
+      alt="screenshot"
+      src="/posts/nu-shiki/output4.png"
+    >
+
+    <p>
+      Note there are some <a href="#development-notes">caveats</a> with
+      <code>--eval</code>, especially around syntax highlighting.
+    </p>
+
+    <p>
+      If you have a long pipeline, the <code>--format</code> option can format
+      it for you:
+    </p>
+
+    <img
+      width="579"
+      height="54"
+      alt="screenshot"
+      src="/posts/nu-shiki/command5.png"
+    >
+
+    <p>
+      so that top-level pipes are put on separate lines. Note this uses some
+      crude parsing that won't always work. As a workaround, if you pass the
+      command and output separately, there's always the option to manually
+      format the command.
+    </p>
+
+    <img
+      width="667"
+      height="189"
+      alt="screenshot"
+      src="/posts/nu-shiki/output5.png"
     >
 
     <p>
@@ -257,8 +297,8 @@
 
     <ul>
       <li>
-        Syntax highlighting did not work properly (<code>nu -c</code> returns a
-        byte stream).
+        Syntax highlighting might not work properly (<code>nu -c</code> returns
+        a byte stream).
       </li>
       <li>
         Certain commands output intermediate text you might want to ignore.
@@ -269,6 +309,13 @@
       </li>
       <li>Sometimes you want to tweak the output slightly for readability.</li>
     </ul>
+
+    <p>
+      <i>Update on October 14, 2025:</i> after discussions with a colleague, the
+      <code>--eval</code> option has been added and an example has been included
+      above. Syntax highlighting mostly works but, at the very least, color
+      differences can be observed.
+    </p>
 
     <h2 id="final-words">Final Words</h2>
 
