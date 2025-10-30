@@ -2,6 +2,24 @@ body {
   max-width: 740px;
 }
 
+h1 > a,
+h2 > a,
+h3 > a,
+h4 > a,
+h5 > a,
+h6 > a {
+  text-decoration: none;
+}
+
+h1 > a:hover,
+h2 > a:hover,
+h3 > a:hover,
+h4 > a:hover,
+h5 > a:hover,
+h6 > a:hover {
+  text-decoration: underline;
+}
+
 .separator {
   border-bottom: 0.125em solid;
   margin-bottom: 2em;
