@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="/favicon.svg">
+    <link rel="stylesheet" type="text/css" href="/neat.css">
+    <link rel="stylesheet" type="text/css" href="/custom.css">
+
+    <title>Static Sites without Static Site Generators</title>
+  </head>
+  <body>
+    <a class="home" href="/">&nwarrow;</a>
+
+    <h1>Static Sites without Static Site Generators</h1>
+
+    <i>Published on November 3, 2025.</i>
+
+    <p>
+      <em>Summary:</em> If you have a small website, like a personal blog, you
+      might not need a static site generator. Writing plain HTML and CSS works
+      reasonably well. And maintaining consistency is easy for a small site.
+      It's even straightforward to write and update a minimal RSS feed. By
+      keeping the technical details to a minimum, we can instead focus on the
+      writing.
+    </p>
+
+    <div class="separator"></div>
+
+    <p>
+      There's almost this rule, that when starting (or in my case, restarting) a
+      personal website or blog, there must be a post about how it was setup.
+      Because many times, the technical aspects are a lot of fun, and it let's
+      us procrastinate writing other posts. So here's my own post about exactly
+      that, and why you might not need a
+      <a href="https://en.wikipedia.org/wiki/Static_site_generator"
+        >static site generator</a
+      >
+      for your website.
+    </p>
+
+    <p>
+      I've used quite a few static site generators in the past and present: at
+      least <a href="https://docusaurus.io">Docusaurus</a>,
+      <a href="https://gohugo.io">Hugo</a>, and
+      <a href="https://jekyllrb.com">Jekyll</a> come to mind. Using a static
+      site generator often feels like the default choice when you have mostly
+      static content. But let's take a look at why we're using them in the first
+      place.
+    </p>
+
+    <ul>
+      <li>Helps maintains consistency across pages (using templates).</li>
+      <li>
+        Let's us write posts in
+        <a href="https://en.wikipedia.org/wiki/Markdown">Markdown</a> or other
+        text-based formats.
+      </li>
+      <li>Enables preprocessing, like running code or generating content.</li>
+      <li>
+        Usually embeds a web-server with
+        <a href="https://github.com/hasura/awesome-live-reloading"
+          >live reloading</a
+        >
+        for development.
+      </li>
+    </ul>
+
+    I've probably forgotten some reasons, but let's dissect these one-by-one.
+
+    <h2 id="consistency"><a href="#consistency">Consistency</a></h2>
+
+    <p>
+      Static site generators maintain consistency and reduce duplication through
+      templates. For example, Hugo uses
+      <a href="https://gohugo.io/templates/introduction">Go templates</a>, while
+      Jekyll uses
+      <a href="https://jekyllrb.com/docs/liquid">Liquid templates</a>. This
+      might sound great at first glance, but instead of writing HTML and CSS,
+      you now have to figure out a templating language. There is also usually a
+      configuration file format, like
+      <a href="https://en.wikipedia.org/wiki/TOML">TOML</a>, for metadata and
+      site configuration. Not to mention a CLI, template functions, rendering
+      customizations, breaking changes, and more.
+    </p>
+
+    <p>
+      For small websites, like a personal blog, there's not that many different
+      kinds of pages, so keeping things consistent is relatively easy.
+      Duplication is often fine, and search-and-replace for updating a bunch of
+      files is usually enough (or writing a quick
+      <a href="https://www.nushell.sh">Nushell</a> script).
+    </p>
+
+    <p>
+      For this site, I opted to use
+      <a href="https://neat.joeldare.com">Neat CSS</a>. It's a single CSS file,
+      less than 200 lines (~3.2 kB) without minification or compression. It also
+      opts to not have any navigation other than a single link back to the home
+      page. This way, there's no need to change multiple pages when navigation
+      changes.
+    </p>
+
+    <p>
+      When creating a new page, I usually just copy an existing similar page,
+      clear out most of the body, and update the page title. This leaves me with
+      roughly the following code duplicated on all pages.
+    </p>
+
+    <pre><code><span style="color:#ABB2BF">&lt;!</span><span style="color:#E06C75">doctype</span><span style="color:#D19A66"> html</span><span style="color:#ABB2BF">&gt;</span>
+<span style="color:#ABB2BF">&lt;</span><span style="color:#E06C75">html</span><span style="color:#D19A66"> lang</span><span style="color:#ABB2BF">=</span><span style="color:#98C379">"en-US"</span><span style="color:#ABB2BF">&gt;</span>
+<span style="color:#ABB2BF">  &lt;</span><span style="color:#E06C75">head</span><span style="color:#ABB2BF">&gt;</span>
+<span style="color:#ABB2BF">    &lt;</span><span style="color:#E06C75">meta</span><span style="color:#D19A66"> charset</span><span style="color:#ABB2BF">=</span><span style="color:#98C379">"utf-8"</span><span style="color:#ABB2BF">&gt;</span>
+<span style="color:#ABB2BF">    &lt;</span><span style="color:#E06C75">meta</span><span style="color:#D19A66"> name</span><span style="color:#ABB2BF">=</span><span style="color:#98C379">"viewport"</span><span style="color:#D19A66"> content</span><span style="color:#ABB2BF">=</span><span style="color:#98C379">"width=device-width, initial-scale=1"</span><span style="color:#ABB2BF">&gt;</span>
+<span style="color:#ABB2BF">    &lt;</span><span style="color:#E06C75">link</span><span style="color:#D19A66"> rel</span><span style="color:#ABB2BF">=</span><span style="color:#98C379">"icon"</span><span style="color:#D19A66"> href</span><span style="color:#ABB2BF">=</span><span style="color:#98C379">"/favicon.svg"</span><span style="color:#ABB2BF">&gt;</span>
+<span style="color:#ABB2BF">    &lt;</span><span style="color:#E06C75">link</span><span style="color:#D19A66"> rel</span><span style="color:#ABB2BF">=</span><span style="color:#98C379">"stylesheet"</span><span style="color:#D19A66"> type</span><span style="color:#ABB2BF">=</span><span style="color:#98C379">"text/css"</span><span style="color:#D19A66"> href</span><span style="color:#ABB2BF">=</span><span style="color:#98C379">"/neat.css"</span><span style="color:#ABB2BF">&gt;</span>
+<span style="color:#ABB2BF">    &lt;</span><span style="color:#E06C75">link</span><span style="color:#D19A66"> rel</span><span style="color:#ABB2BF">=</span><span style="color:#98C379">"stylesheet"</span><span style="color:#D19A66"> type</span><span style="color:#ABB2BF">=</span><span style="color:#98C379">"text/css"</span><span style="color:#D19A66"> href</span><span style="color:#ABB2BF">=</span><span style="color:#98C379">"/custom.css"</span><span style="color:#ABB2BF">&gt;</span>
+<span style="color:#ABB2BF">    &lt;</span><span style="color:#E06C75">title</span><span style="color:#ABB2BF">&gt;&lt;/</span><span style="color:#E06C75">title</span><span style="color:#ABB2BF">&gt;</span>
+<span style="color:#ABB2BF">  &lt;/</span><span style="color:#E06C75">head</span><span style="color:#ABB2BF">&gt;</span>
+<span style="color:#ABB2BF">  &lt;</span><span style="color:#E06C75">body</span><span style="color:#ABB2BF">&gt;</span>
+<span style="color:#ABB2BF">    &lt;</span><span style="color:#E06C75">a</span><span style="color:#D19A66"> class</span><span style="color:#ABB2BF">=</span><span style="color:#98C379">"home"</span><span style="color:#D19A66"> href</span><span style="color:#ABB2BF">=</span><span style="color:#98C379">"/"</span><span style="color:#ABB2BF">&gt;</span><span style="color:#E06C75">&amp;nwarrow;</span><span style="color:#ABB2BF">&lt;/</span><span style="color:#E06C75">a</span><span style="color:#ABB2BF">&gt;</span>
+<span style="color:#ABB2BF">  &lt;/</span><span style="color:#E06C75">body</span><span style="color:#ABB2BF">&gt;</span>
+<span style="color:#ABB2BF">&lt;/</span><span style="color:#E06C75">html</span><span style="color:#ABB2BF">&gt;</span></code></pre>
+
+    <p>
+      Organization is trivial, since paths on the site correspond to file system
+      paths. The notable exception to this is the
+      <code>index.html</code> convention as discussed
+      <a href="#development">below</a>.
+    </p>
+
+    <h2 id="markdown"><a href="#markdown">Markdown</a></h2>
+
+    <p>
+      Have you tried writing HTML recently? I had not until a few weeks ago. I
+      was under the impression that it would be a not-so-great experience. But
+      my last time writing plain HTML documents was also at least 10 years ago.
+      Probably more. It turned out to be a pretty refreshing experience. The
+      standard has evolved a lot, and good editor support and formatters help (I
+      have
+      <a href="https://prettier.io">Prettier</a> setup for my site).
+    </p>
+
+    <p>
+      Don't get me wrong, I still think Markdown has obvious upsides, and given
+      the choice, I'd probably still pick it over HTML. But writing plain HTML
+      is actually not <em>that</em> bad. I'd invite you to give it a try and you
+      might be pleasantly surprised. Maybe your idea of it is as old as mine
+      was.
+    </p>
+
+    <h2 id="preprocessing"><a href="#preprocessing">Preprocessing</a></h2>
+
+    <p>
+      This topic covers <em>a lot</em>. Everything from image processing,
+      JavaScript building, using <a href="https://sass-lang.com">Sass</a> or
+      other CSS alternatives, fingerprinting and
+      <a
+        href="https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity"
+        >SRI hashing</a
+      >, concatenating files, to ensuring code examples compile, and generating
+      sitemaps and <a href="https://en.wikipedia.org/wiki/RSS">RSS</a> feeds.
+      You can probably think of even more things.
+    </p>
+
+    <p>
+      Some of these are arguably useful. For example, in many Scala open source
+      projects, we use
+      <a href="https://scalameta.org/mdoc/">mdoc</a> to type check code examples
+      in Markdown. This ensures we always have up-to-date and working
+      documentation. That alone can be enough to motivate the use of static site
+      generators.
+    </p>
+
+    <p>
+      It ultimately depends on your use case whether you need preprocessing or
+      not. I initially thought I would need something to generate the RSS feed.
+      But as it turns out, writing a minimal
+      <a href="/posts.xml">posts feed</a> is straightforward. But you'll
+      probably have to limit how the feed looks like. For example, maintaining
+      full-text copies of posts in the feed (and updating relevant timestamps)
+      is not pleasant. But most RSS readers can easily extract the full post
+      content anyway.
+    </p>
+
+    <p>
+      Similarly, the syntax-highlighted code above was generated using
+      <a href="https://shiki.style">Shiki</a>. It outputs plain HTML with
+      inline-styles for the colors. This way, there's no need for preprocessing
+      or JavaScript. Yes, you won't easily be able to change theme for all code
+      on your site through configuration. But maybe that also means one less
+      thing to obsess over on your site.
+    </p>
+
+    <h2 id="development"><a href="#development">Development</a></h2>
+
+    <p>
+      Having a web server for local development can be useful. However, it's
+      also possible to make the site work locally without one. I started without
+      a web server, then realized there are some pretty good reasons to have
+      one, and not only for live reloading support.
+    </p>
+
+    <ul>
+      <li>
+        We can omit <code>index.html</code> from links, making them look how
+        we've come to expect.
+      </li>
+      <li>
+        It's possible to use root (<code>/</code>) links, which would otherwise
+        refer to the file system root.
+      </li>
+      <li>
+        It can match better with how the site works when deployed (e.g. custom
+        404 pages).
+      </li>
+      <li>
+        Having live reload enables quick previews of how the site looks like on
+        each file save.
+      </li>
+    </ul>
+
+    <p>
+      I started with running
+      <a href="https://github.com/tapio/live-server">live-server</a> manually
+      and then switched to the
+      <a href="https://github.com/ritwickdey/vscode-live-server">Live Server</a>
+      extension, which essentially wraps the former project as a Visual Studio
+      Code extension for convenience. If these don't fit your setup, there seems
+      to be plenty of other options available.
+    </p>
+
+    <p>
+      Having a website which can be browsed offline without a web server
+      initially sounded like a great idea. But not being able to use root links
+      meant I would always have to track where the page was relative to the
+      linked resources. This became a bit more tedious than necessary.
+    </p>
+
+    <h2 id="deployment"><a href="#deployment">Deployment</a></h2>
+
+    <p>
+      Even with a static site generator, deployment is usually easy. Without
+      one, it can <em>really</em> be as simple as pushing a git commit, since
+      it's just the files being served. I host this site on
+      <a href="https://docs.github.com/en/pages">GitHub Pages</a> and the full
+      <a href="https://github.com/vlovgr/vlovgr.se">source code</a> is
+      available.
+    </p>
+
+    <h2 id="final-words"><a href="#final-words">Final Words</a></h2>
+
+    <p>
+      Perhaps one of the biggest reasons for not focusing too much on the
+      technical details is that it instead allows us to focus on the writing. We
+      can find our own workflow: what editor to use, the time of day that works
+      best, and so on. Otherwise, it might be tempting to constantly tweak the
+      technical setup, when it's really the writing that matters most.
+    </p>
+  </body>
+</html>

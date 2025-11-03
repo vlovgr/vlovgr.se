@@ -4,7 +4,12 @@
     <title>Viktor Rudebeck</title>
     <link>https://vlovgr.se</link>
     <description>Posts by Viktor Rudebeck</description>
-
+    <item>
+      <title>Static Sites without Static Site Generators</title>
+      <link>https://vlovgr.se/posts/static-sites</link>
+      <description
+      >If you have a small website, like a personal blog, you might not need a static site generator. Writing plain HTML and CSS works reasonably well. And maintaining consistency is easy for a small site. It's even straightforward to write and update a minimal RSS feed. By keeping the technical details to a minimum, we can instead focus on the writing.</description>
+    </item>
     <item>
       <title>Generating Images of Nushell Commands</title>
       <link>https://vlovgr.se/posts/nu-shiki</link>
