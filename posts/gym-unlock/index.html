@@ -85,17 +85,17 @@
       to <code>curl</code> or other means of making HTTP requests.
     </p>
 
-    <pre><code><span class="line"><span style="color:#D73A49">let</span><span style="color:#24292E"> params </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [</span></span>
-<span class="line"><span style="color:#032F62">  'grant_type=password'</span></span>
-<span class="line"><span style="color:#032F62">  'username=&#x3C;email>'</span></span>
-<span class="line"><span style="color:#032F62">  'password=&#x3C;password>'</span></span>
-<span class="line"><span style="color:#032F62">  'client_id=&#x3C;gym>_cvbmir5p77s96dyxzl9vgm2geeghao'</span></span>
-<span class="line"><span style="color:#032F62">  'client_secret=lktfpc0css5kloo5zzrmddwiswsno6drav'</span></span>
-<span class="line"><span style="color:#24292E">] </span><span style="color:#D73A49">|</span><span style="color:#D73A49"> str join</span><span style="color:#032F62"> '&#x26;'</span></span>
+    <pre><code><span class="line"><span style="color:#D73A49">let</span><span style="color:#6C7F92"> params </span><span style="color:#D73A49">=</span><span style="color:#6C7F92"> [</span></span>
+<span class="line"><span style="color:#0D6FDE">  'grant_type=password'</span></span>
+<span class="line"><span style="color:#0D6FDE">  'username=&#x3C;email>'</span></span>
+<span class="line"><span style="color:#0D6FDE">  'password=&#x3C;password>'</span></span>
+<span class="line"><span style="color:#0D6FDE">  'client_id=&#x3C;gym>_cvbmir5p77s96dyxzl9vgm2geeghao'</span></span>
+<span class="line"><span style="color:#0D6FDE">  'client_secret=lktfpc0css5kloo5zzrmddwiswsno6drav'</span></span>
+<span class="line"><span style="color:#6C7F92">] </span><span style="color:#D73A49">|</span><span style="color:#D73A49"> str join</span><span style="color:#0D6FDE"> '&#x26;'</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">let</span><span style="color:#24292E"> url </span><span style="color:#D73A49">=</span><span style="color:#032F62"> $'https://&#x3C;gym>.api.twiik.me/v3/oauth/token?(</span><span style="color:#24292E">$params</span><span style="color:#032F62">)'</span></span>
+<span class="line"><span style="color:#D73A49">let</span><span style="color:#6C7F92"> url </span><span style="color:#D73A49">=</span><span style="color:#0D6FDE"> $'https://&#x3C;gym>.api.twiik.me/v3/oauth/token?(</span><span style="color:#6C7F92">$params</span><span style="color:#0D6FDE">)'</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">http post</span><span style="color:#D73A49"> --</span><span style="color:#E36209">content-type</span><span style="color:#032F62"> application/json</span><span style="color:#24292E"> $url {}</span></span></code></pre>
+<span class="line"><span style="color:#D73A49">http post</span><span style="color:#D73A49"> --</span><span style="color:#E36209">content-type</span><span style="color:#0D6FDE"> application/json</span><span style="color:#6C7F92"> $url {}</span></span></code></pre>
 
     <p>
       From the response, we can observe we're dealing with
@@ -107,15 +107,15 @@
       means we'll have to manage state for the refresh.
     </p>
 
-    <pre><code><span class="line"><span style="color:#24292e">╭───────────────┬────────────────────────────────────────────────────╮</span></span>
-<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> access_token</span><span style="color:#24292e">  │</span><span style="color:#24292e"> t3t4noi1ppikvzfpctiymaxxwdw03xor2uhawmu0a1e5qld53j</span><span style="color:#24292e"> │</span></span>
-<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> token_type</span><span style="color:#24292e">    │</span><span style="color:#24292e"> bearer</span><span style="color:#24292e">                                             │</span></span>
-<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> expires_in</span><span style="color:#24292e">    │</span><span style="color:#24292e"> 1209600</span><span style="color:#24292e">                                            │</span></span>
-<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> expire_time</span><span style="color:#24292e">   │</span><span style="color:#24292e"> 1763798862431</span><span style="color:#24292e">                                      │</span></span>
-<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> refresh_token</span><span style="color:#24292e"> │</span><span style="color:#24292e"> lnvsa4tx4jrjuln5xyn0g4bbv07vihdlodg0dd6nae3apabzsz</span><span style="color:#24292e"> │</span></span>
-<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> scope</span><span style="color:#24292e">         │</span><span style="color:#24292e">                                                    │</span></span>
-<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> state</span><span style="color:#24292e">         │</span><span style="color:#24292e">                                                    │</span></span>
-<span class="line"><span style="color:#24292e">╰───────────────┴────────────────────────────────────────────────────╯</span></span></code></pre>
+    <pre><code><span class="line"><span style="color:#6C7F92">╭───────────────┬────────────────────────────────────────────────────╮</span></span>
+<span class="line"><span style="color:#6C7F92">│</span><span style="color:#778FA7;font-weight:bold"> access_token</span><span style="color:#6C7F92">  │</span><span style="color:#6C7F92"> t3t4noi1ppikvzfpctiymaxxwdw03xor2uhawmu0a1e5qld53j</span><span style="color:#6C7F92"> │</span></span>
+<span class="line"><span style="color:#6C7F92">│</span><span style="color:#778FA7;font-weight:bold"> token_type</span><span style="color:#6C7F92">    │</span><span style="color:#6C7F92"> bearer</span><span style="color:#6C7F92">                                             │</span></span>
+<span class="line"><span style="color:#6C7F92">│</span><span style="color:#778FA7;font-weight:bold"> expires_in</span><span style="color:#6C7F92">    │</span><span style="color:#6C7F92"> 1209600</span><span style="color:#6C7F92">                                            │</span></span>
+<span class="line"><span style="color:#6C7F92">│</span><span style="color:#778FA7;font-weight:bold"> expire_time</span><span style="color:#6C7F92">   │</span><span style="color:#6C7F92"> 1763798862431</span><span style="color:#6C7F92">                                      │</span></span>
+<span class="line"><span style="color:#6C7F92">│</span><span style="color:#778FA7;font-weight:bold"> refresh_token</span><span style="color:#6C7F92"> │</span><span style="color:#6C7F92"> lnvsa4tx4jrjuln5xyn0g4bbv07vihdlodg0dd6nae3apabzsz</span><span style="color:#6C7F92"> │</span></span>
+<span class="line"><span style="color:#6C7F92">│</span><span style="color:#778FA7;font-weight:bold"> scope</span><span style="color:#6C7F92">         │</span><span style="color:#6C7F92">                                                    │</span></span>
+<span class="line"><span style="color:#6C7F92">│</span><span style="color:#778FA7;font-weight:bold"> state</span><span style="color:#6C7F92">         │</span><span style="color:#6C7F92">                                                    │</span></span>
+<span class="line"><span style="color:#6C7F92">╰───────────────┴────────────────────────────────────────────────────╯</span></span></code></pre>
 
     <p>
       The API documentation lets us know how to issue a refresh request. The
@@ -127,11 +127,11 @@
 
     <p>Let's look at a request for unlocking one of the gym doors.</p>
 
-    <pre><code><span class="line"><span style="color:#D73A49">let</span><span style="color:#24292E"> headers </span><span style="color:#D73A49">=</span><span style="color:#24292E"> { authorization</span><span style="color:#D73A49">:</span><span style="color:#032F62"> 'Bearer t3t4noi1ppikvzfpctiymaxxwdw03xor2uhawmu0a1e5qld53j'</span><span style="color:#24292E"> }</span></span>
-<span class="line"><span style="color:#D73A49">let</span><span style="color:#24292E"> body </span><span style="color:#D73A49">=</span><span style="color:#24292E"> { lat</span><span style="color:#D73A49">:</span><span style="color:#032F62"> '74.01151'</span><span style="color:#24292E"> lng</span><span style="color:#D73A49">:</span><span style="color:#032F62"> '165.58725'</span><span style="color:#24292E"> qr</span><span style="color:#D73A49">:</span><span style="color:#032F62"> 'IQ4aP5xLB0Dn36BKmcWz'</span><span style="color:#24292E"> }</span></span>
-<span class="line"><span style="color:#D73A49">let</span><span style="color:#24292E"> url </span><span style="color:#D73A49">=</span><span style="color:#032F62"> 'https://&#x3C;gym>.api.twiik.me/v3/&lt;gym&gt;/user/checkin'</span></span>
+    <pre><code><span class="line"><span style="color:#D73A49">let</span><span style="color:#6C7F92"> headers </span><span style="color:#D73A49">=</span><span style="color:#6C7F92"> { authorization</span><span style="color:#D73A49">:</span><span style="color:#0D6FDE"> 'Bearer t3t4noi1ppikvzfpctiymaxxwdw03xor2uhawmu0a1e5qld53j'</span><span style="color:#6C7F92"> }</span></span>
+<span class="line"><span style="color:#D73A49">let</span><span style="color:#6C7F92"> body </span><span style="color:#D73A49">=</span><span style="color:#6C7F92"> { lat</span><span style="color:#D73A49">:</span><span style="color:#0D6FDE"> '74.01151'</span><span style="color:#6C7F92"> lng</span><span style="color:#D73A49">:</span><span style="color:#0D6FDE"> '165.58725'</span><span style="color:#6C7F92"> qr</span><span style="color:#D73A49">:</span><span style="color:#0D6FDE"> 'IQ4aP5xLB0Dn36BKmcWz'</span><span style="color:#6C7F92"> }</span></span>
+<span class="line"><span style="color:#D73A49">let</span><span style="color:#6C7F92"> url </span><span style="color:#D73A49">=</span><span style="color:#0D6FDE"> 'https://&#x3C;gym>.api.twiik.me/v3/&lt;gym&gt;/user/checkin'</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">http post</span><span style="color:#D73A49"> --</span><span style="color:#E36209">content-type</span><span style="color:#032F62"> application/x-www-form-urlencoded</span><span style="color:#D73A49"> --</span><span style="color:#E36209">headers</span><span style="color:#24292E"> $headers $url $body</span></span></code></pre>
+<span class="line"><span style="color:#D73A49">http post</span><span style="color:#D73A49"> --</span><span style="color:#E36209">content-type</span><span style="color:#0D6FDE"> application/x-www-form-urlencoded</span><span style="color:#D73A49"> --</span><span style="color:#E36209">headers</span><span style="color:#6C7F92"> $headers $url $body</span></span></code></pre>
 
     <p>
       This request is not in the API documentation. Interestingly, it uses the
@@ -141,18 +141,18 @@
       permissions, right?
     </p>
 
-    <pre><code><span class="line"><span style="color:#24292e">╭─────────┬───────────────────────────────────────────────────────────────────────────────╮</span></span>
-<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> code</span><span style="color:#24292e">    │</span><span style="color:#24292e"> DISTANCE_ERROR</span><span style="color:#24292e">                                                                │</span></span>
-<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> title</span><span style="color:#24292e">   │</span><span style="color:#24292e"> Bad request</span><span style="color:#24292e">                                                                   │</span></span>
-<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> message</span><span style="color:#24292e"> │</span><span style="color:#24292e"> Det gick tyvärr inte att öppna dörren, din position är för långt från gymmet.</span><span style="color:#24292e"> │</span></span>
-<span class="line"><span style="color:#24292e">╰─────────┴───────────────────────────────────────────────────────────────────────────────╯</span></span></code></pre>
+    <pre><code><span class="line"><span style="color:#6C7F92">╭─────────┬───────────────────────────────────────────────────────────────────────────────╮</span></span>
+<span class="line"><span style="color:#6C7F92">│</span><span style="color:#778FA7;font-weight:bold"> code</span><span style="color:#6C7F92">    │</span><span style="color:#6C7F92"> DISTANCE_ERROR</span><span style="color:#6C7F92">                                                                │</span></span>
+<span class="line"><span style="color:#6C7F92">│</span><span style="color:#778FA7;font-weight:bold"> title</span><span style="color:#6C7F92">   │</span><span style="color:#6C7F92"> Bad request</span><span style="color:#6C7F92">                                                                   │</span></span>
+<span class="line"><span style="color:#6C7F92">│</span><span style="color:#778FA7;font-weight:bold"> message</span><span style="color:#6C7F92"> │</span><span style="color:#6C7F92"> Det gick tyvärr inte att öppna dörren, din position är för långt från gymmet.</span><span style="color:#6C7F92"> │</span></span>
+<span class="line"><span style="color:#6C7F92">╰─────────┴───────────────────────────────────────────────────────────────────────────────╯</span></span></code></pre>
 
     <p>If the request is successful, we instead get the following response:</p>
 
-    <pre><code><span class="line"><span style="color:#24292e">╭────────────┬──────╮</span></span>
-<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> status</span><span style="color:#24292e">     │</span><span style="color:#24292e"> ok</span><span style="color:#24292e">   │</span></span>
-<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> checked_in</span><span style="color:#24292e"> │</span><span style="color:#24292e"> true</span><span style="color:#24292e"> │</span></span>
-<span class="line"><span style="color:#24292e">╰────────────┴──────╯</span></span></code></pre>
+    <pre><code><span class="line"><span style="color:#6C7F92">╭────────────┬──────╮</span></span>
+<span class="line"><span style="color:#6C7F92">│</span><span style="color:#778FA7;font-weight:bold"> status</span><span style="color:#6C7F92">     │</span><span style="color:#6C7F92"> ok</span><span style="color:#6C7F92">   │</span></span>
+<span class="line"><span style="color:#6C7F92">│</span><span style="color:#778FA7;font-weight:bold"> checked_in</span><span style="color:#6C7F92"> │</span><span style="color:#6C7F92"> true</span><span style="color:#6C7F92"> │</span></span>
+<span class="line"><span style="color:#6C7F92">╰────────────┴──────╯</span></span></code></pre>
 
     <p>
       and the door hopefully unlocks (there have been technical issues
