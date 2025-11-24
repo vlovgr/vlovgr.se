@@ -5,6 +5,12 @@
     <link>https://vlovgr.se</link>
     <description>Posts by Viktor Rudebeck</description>
     <item>
+      <title>Unlocking the Gym with Apple Shortcuts</title>
+      <link>https://vlovgr.se/posts/gym-unlock</link>
+      <description
+      >Accessing my local gym requires a smartphone application, scanning two QR codes, and granting location permissions. I've figured out the unlocking mechanism and used Apple Shortcuts to unlock the gym doors with a single tap. This completely bypasses the application, and does not require me to reveal my actual location.</description>
+    </item>
+    <item>
       <title>Static Sites without Static Site Generators</title>
       <link>https://vlovgr.se/posts/static-sites</link>
       <description

@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="/favicon.svg">
+    <link rel="stylesheet" type="text/css" href="/neat.css">
+    <link rel="stylesheet" type="text/css" href="/custom.css">
+
+    <title>Unlocking the Gym with Apple Shortcuts</title>
+  </head>
+  <body>
+    <a class="home" href="/">&nwarrow;</a>
+
+    <h1>Unlocking the Gym with Apple Shortcuts</h1>
+
+    <i>Published on November 24, 2025.</i>
+
+    <p>
+      <em>Summary:</em> Accessing my local gym requires a smartphone
+      application, scanning two QR codes, and granting location permissions.
+      I've figured out the unlocking mechanism and used Apple Shortcuts to
+      unlock the gym doors with a single tap. This completely bypasses the
+      application, and does not require me to reveal my actual location.
+    </p>
+
+    <div class="separator"></div>
+
+    <p>
+      The access control mechanism at my local gym is a sort of
+      <a href="https://en.wikipedia.org/wiki/Mantrap_(access_control)"
+        >mantrap</a
+      >. There's a small space with two interlocking doors, where the first door
+      has to be closed before the second one can be opened. It's in place to
+      avoid
+      <a href="https://en.wikipedia.org/wiki/Piggybacking_(security)"
+        >piggybacking</a
+      >
+      or tailgating, but I'm skeptical it does anything but being annoying.
+    </p>
+
+    <p>
+      Each of the two doors have an associated
+      <a href="https://en.wikipedia.org/wiki/QR_code">QR code</a> which you're
+      meant to scan with a smartphone camera and the gym's application. This
+      works <em>passably</em>, until there's either technical issues, and it's
+      impossible to get in to the gym, or until there's a power outage and
+      you're stuck in the mantrap.
+    </p>
+
+    <p>If you're like me, you start to wonder what's on those QR codes.</p>
+
+    <ol>
+      <li>First QR code: <code>IQ4aP5xLB0Dn36BKmcWz</code>.</li>
+      <li>Second QR code: <code>P9tjKDTkjBE1oSU2L3jJ</code>.</li>
+    </ol>
+
+    <p>
+      These look like 20 character random alpha-numeric identifiers. I guess
+      we'll have to figure out what the application is doing with these codes.
+      I'm using the <a href="https://proxyman.com">Proxyman</a> application on
+      iOS to capture the HTTPS traffic, and then the desktop application for
+      further analysis. (<a href="https://www.charlesproxy.com">Charles</a>
+      is also excellent.)
+    </p>
+
+    <p>
+      Looking at the captures, we can see the gym is using the
+      <a href="https://twiik.me">Twiik</a> third-party platform. Since Twiik has
+      their
+      <a href="https://docs.api.twiik.me">Rest API documentation</a> publicly
+      available (or at least parts of it), figuring out what's going on is
+      easier than you might initially guess.
+    </p>
+
+    <h2 id="login"><a href="#login">Login</a></h2>
+
+    <p>
+      If we start from a logged out state, the application starts with a login
+      request. The examples here are with
+      <a href="https://www.nushell.sh">Nushell</a> using the
+      <a href="https://www.nushell.sh/commands/categories/network.html">http</a>
+      commands. If you have some HTTP familiarity, these should easily translate
+      to <code>curl</code> or other means of making HTTP requests.
+    </p>
+
+    <pre><code><span class="line"><span style="color:#D73A49">let</span><span style="color:#24292E"> params </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#032F62">  'grant_type=password'</span></span>
+<span class="line"><span style="color:#032F62">  'username=&#x3C;email>'</span></span>
+<span class="line"><span style="color:#032F62">  'password=&#x3C;password>'</span></span>
+<span class="line"><span style="color:#032F62">  'client_id=&#x3C;gym>_cvbmir5p77s96dyxzl9vgm2geeghao'</span></span>
+<span class="line"><span style="color:#032F62">  'client_secret=lktfpc0css5kloo5zzrmddwiswsno6drav'</span></span>
+<span class="line"><span style="color:#24292E">] </span><span style="color:#D73A49">|</span><span style="color:#D73A49"> str join</span><span style="color:#032F62"> '&#x26;'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">let</span><span style="color:#24292E"> url </span><span style="color:#D73A49">=</span><span style="color:#032F62"> $'https://&#x3C;gym>.api.twiik.me/v3/oauth/token?(</span><span style="color:#24292E">$params</span><span style="color:#032F62">)'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">http post</span><span style="color:#D73A49"> --</span><span style="color:#E36209">content-type</span><span style="color:#032F62"> application/json</span><span style="color:#24292E"> $url {}</span></span></code></pre>
+
+    <p>
+      From the response, we can observe we're dealing with
+      <a
+        href="https://www.oauth.com/oauth2-servers/making-authenticated-requests/refreshing-an-access-token"
+        >OAuth 2.0 refresh tokens</a
+      >
+      and that tokens are valid for 2 weeks (1&nbsp;209&nbsp;600 seconds). This
+      means we'll have to manage state for the refresh.
+    </p>
+
+    <pre><code><span class="line"><span style="color:#24292e">╭───────────────┬────────────────────────────────────────────────────╮</span></span>
+<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> access_token</span><span style="color:#24292e">  │</span><span style="color:#24292e"> t3t4noi1ppikvzfpctiymaxxwdw03xor2uhawmu0a1e5qld53j</span><span style="color:#24292e"> │</span></span>
+<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> token_type</span><span style="color:#24292e">    │</span><span style="color:#24292e"> bearer</span><span style="color:#24292e">                                             │</span></span>
+<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> expires_in</span><span style="color:#24292e">    │</span><span style="color:#24292e"> 1209600</span><span style="color:#24292e">                                            │</span></span>
+<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> expire_time</span><span style="color:#24292e">   │</span><span style="color:#24292e"> 1763798862431</span><span style="color:#24292e">                                      │</span></span>
+<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> refresh_token</span><span style="color:#24292e"> │</span><span style="color:#24292e"> lnvsa4tx4jrjuln5xyn0g4bbv07vihdlodg0dd6nae3apabzsz</span><span style="color:#24292e"> │</span></span>
+<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> scope</span><span style="color:#24292e">         │</span><span style="color:#24292e">                                                    │</span></span>
+<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> state</span><span style="color:#24292e">         │</span><span style="color:#24292e">                                                    │</span></span>
+<span class="line"><span style="color:#24292e">╰───────────────┴────────────────────────────────────────────────────╯</span></span></code></pre>
+
+    <p>
+      The API documentation lets us know how to issue a refresh request. The
+      differences are using <code>grant_type=refresh_token</code> and providing
+      <code>refresh_token=&lt;token&gt;</code> instead of login details.
+    </p>
+
+    <h2 id="unlock"><a href="#unlock">Unlock</a></h2>
+
+    <p>Let's look at a request for unlocking one of the gym doors.</p>
+
+    <pre><code><span class="line"><span style="color:#D73A49">let</span><span style="color:#24292E"> headers </span><span style="color:#D73A49">=</span><span style="color:#24292E"> { authorization</span><span style="color:#D73A49">:</span><span style="color:#032F62"> 'Bearer t3t4noi1ppikvzfpctiymaxxwdw03xor2uhawmu0a1e5qld53j'</span><span style="color:#24292E"> }</span></span>
+<span class="line"><span style="color:#D73A49">let</span><span style="color:#24292E"> body </span><span style="color:#D73A49">=</span><span style="color:#24292E"> { lat</span><span style="color:#D73A49">:</span><span style="color:#032F62"> '74.01151'</span><span style="color:#24292E"> lng</span><span style="color:#D73A49">:</span><span style="color:#032F62"> '165.58725'</span><span style="color:#24292E"> qr</span><span style="color:#D73A49">:</span><span style="color:#032F62"> 'IQ4aP5xLB0Dn36BKmcWz'</span><span style="color:#24292E"> }</span></span>
+<span class="line"><span style="color:#D73A49">let</span><span style="color:#24292E"> url </span><span style="color:#D73A49">=</span><span style="color:#032F62"> 'https://&#x3C;gym>.api.twiik.me/v3/&lt;gym&gt;/user/checkin'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">http post</span><span style="color:#D73A49"> --</span><span style="color:#E36209">content-type</span><span style="color:#032F62"> application/x-www-form-urlencoded</span><span style="color:#D73A49"> --</span><span style="color:#E36209">headers</span><span style="color:#24292E"> $headers $url $body</span></span></code></pre>
+
+    <p>
+      This request is not in the API documentation. Interestingly, it uses the
+      GPS location of the device to ensure we're not too far from where the QR
+      code is supposed to be. I'm curious if anyone has ever triggered this
+      error response except for me. Great reason to ask for location
+      permissions, right?
+    </p>
+
+    <pre><code><span class="line"><span style="color:#24292e">╭─────────┬───────────────────────────────────────────────────────────────────────────────╮</span></span>
+<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> code</span><span style="color:#24292e">    │</span><span style="color:#24292e"> DISTANCE_ERROR</span><span style="color:#24292e">                                                                │</span></span>
+<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> title</span><span style="color:#24292e">   │</span><span style="color:#24292e"> Bad request</span><span style="color:#24292e">                                                                   │</span></span>
+<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> message</span><span style="color:#24292e"> │</span><span style="color:#24292e"> Det gick tyvärr inte att öppna dörren, din position är för långt från gymmet.</span><span style="color:#24292e"> │</span></span>
+<span class="line"><span style="color:#24292e">╰─────────┴───────────────────────────────────────────────────────────────────────────────╯</span></span></code></pre>
+
+    <p>If the request is successful, we instead get the following response:</p>
+
+    <pre><code><span class="line"><span style="color:#24292e">╭────────────┬──────╮</span></span>
+<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> status</span><span style="color:#24292e">     │</span><span style="color:#24292e"> ok</span><span style="color:#24292e">   │</span></span>
+<span class="line"><span style="color:#24292e">│</span><span style="color:#6a737d;font-weight:bold"> checked_in</span><span style="color:#24292e"> │</span><span style="color:#24292e"> true</span><span style="color:#24292e"> │</span></span>
+<span class="line"><span style="color:#24292e">╰────────────┴──────╯</span></span></code></pre>
+
+    <p>
+      and the door hopefully unlocks (there have been technical issues
+      preventing access). The request is repeated for the second door, except
+      using the identifier from the second QR code. Note the first door has to
+      be closed in order for the second one to be unlocked.
+    </p>
+
+    <h2 id="automation"><a href="#automation">Automation</a></h2>
+
+    <p>
+      We now know how to login, refresh the access token, and unlock the doors.
+      Maybe I just have <em>too</em> high expectations, but the iOS application
+      is slow, and the whole procedure of scanning QR codes is annoying. Plus,
+      I'd rather not provide location permissions. Wouldn't it be great if we
+      were able to bypass the application entirely?
+    </p>
+
+    <p>
+      I had not used
+      <a href="https://en.wikipedia.org/wiki/Shortcuts_(Apple)"
+        >Apple Shortcuts</a
+      >
+      extensively before, so it was a fun challenge to see if it was possible to
+      unlock the doors with a shortcut. This could mean a single tap (on the
+      Apple Watch) per door to perform the unlock (not counting taps to get to
+      the Shortcuts application).
+    </p>
+
+    <h3 id="step-1-login"><a href="#step-1-login">Step 1: Login</a></h3>
+
+    <p>
+      For the initial login, we need to perform a fairly standard POST request
+      with an empty JSON body. Apple Shortcuts supports this natively and you
+      can add both headers and body when necessary.
+    </p>
+
+    <img
+      src="step-1-login-post.png"
+      alt="screenshot"
+      style="border-radius: 20px; width: 75%; height: 75%"
+    >
+
+    <p>
+      We need to store the response (at least the access token, the refresh
+      token, and expiry time) somewhere and then avoid this login request if
+      there's already a stored response. Shortcuts supports using Files (<a
+        href="https://www.icloud.com/iclouddrive"
+        >iCloud Drive</a
+      >) for storing and retrieving files.
+    </p>
+
+    <img
+      src="step-1-login-flow.png"
+      alt="screenshot"
+      style="border-radius: 20px; width: 75%; height: 75%"
+    >
+
+    <p>
+      The "Get dictionary from" step is parsing the JSON response into a
+      dictionary, so that values can be retrieved by Shortcuts. If we would like
+      to avoid storing our email and password in the shortcut, we can run this
+      once and then change to only read the file from that point on.
+    </p>
+
+    <h3 id="step-2-refresh"><a href="#step-2-refresh">Step 2: Refresh</a></h3>
+
+    <p>
+      There's a function <code>Current Date</code> to get the current time. But
+      we need an epoch value to compare with the expiry time. Turns out, you can
+      add a number to the returned date and it is converted to epoch seconds. In
+      the example below, I add 24 hours (86&nbsp;400 seconds) to refresh
+      slightly early.
+    </p>
+
+    <img
+      src="step-2-refresh-flow.png"
+      alt="screenshot"
+      style="border-radius: 20px; width: 75%; height: 75%"
+    >
+
+    <p>
+      If we need to refresh the token, we run the refresh request and save the
+      response by overwriting the existing file. If not, we can use the
+      dictionary we already have from the first step.
+    </p>
+
+    <h3 id="step-3-unlock"><a href="#step-3-unlock">Step 3: Unlock</a></h3>
+
+    <p>
+      The Shortcuts application supports
+      <code>application/x-www-form-urlencoded</code> requests. Instead of
+      providing our real location, we can use some fixed GPS coordinates close
+      to the gym. This enables remote unlocking of the doors, but the gym was
+      (surely?) aware of that possibility. Guessing this was only ever meant to
+      prevent taking pictures of the QR codes and scanning them at home.
+    </p>
+
+    <img
+      src="step-3-unlock-flow.png"
+      alt="screenshot"
+      style="border-radius: 20px; width: 75%; height: 75%"
+    >
+
+    <h2 id="result"><a href="#result">Result</a></h2>
+
+    <p>
+      We're now able to completely get rid of the application provided by the
+      gym, and can use two (one per door) shortcuts to unlock the gym doors.
+      Following is how the shortcuts turned out on macOS.
+    </p>
+
+    <img src="macos.png" alt="screenshot" style="width: 50%; height: 50%">
+
+    <p>
+      The shortcuts also automatically synchronize to iOS with the same
+      appearance.
+    </p>
+
+    <img src="ios.png" alt="screenshot" style="width: 50%; height: 50%">
+
+    <p>It's especially convenient to run the shortcuts using an Apple Watch.</p>
+
+    <img src="watchos.png" alt="screenshot" style="width: 50%; height: 50%">
+
+    <h2 id="final-words"><a href="#final-words">Final Words</a></h2>
+
+    <p>
+      The name of the gym and all identifying information has been randomized in
+      the blog post. I hope you found the post useful and that it can inspire
+      similar automations. While it's mostly unnecessary security to require
+      location permissions for unlocking doors (not to mention privacy
+      concerns), the remote unlocking possibility should not be abused. I've
+      personally found no practical use for it.
+    </p>
+  </body>
+</html>
