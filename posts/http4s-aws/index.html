@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="/favicon.svg">
+    <link rel="stylesheet" type="text/css" href="/neat.css">
+    <link rel="stylesheet" type="text/css" href="/custom.css">
+
+    <title>A Scala Alternative to AWS SDK for Java</title>
+  </head>
+  <body>
+    <a class="home" href="/">&nwarrow;</a>
+
+    <h1>A Scala Alternative to AWS SDK for Java</h1>
+
+    <i>Published on December 15, 2025.</i>
+
+    <p>
+      <em>Summary:</em> If you're using
+      <a href="https://typelevel.org">Typelevel</a> Scala, and
+      <a href="https://http4s.org">http4s</a>
+      more specifically,
+      <a href="https://github.com/maginepro/http4s-aws">http4s-aws</a> can be a
+      viable alternative to the
+      <a href="https://github.com/aws/aws-sdk-java-v2">AWS SDK for Java</a> and
+      does bring some <a href="#benefits">benefits</a>. Please give it a try and
+      <a href="https://github.com/maginepro/http4s-aws/issues">let us know</a>
+      if you spot any mistakes or opportunities for improvement.
+    </p>
+
+    <div class="separator"></div>
+
+    <p>
+      If you're using Scala on AWS, you're likely using the official
+      <a href="https://github.com/aws/aws-sdk-java-v2">AWS SDK for Java</a>. The
+      SDK is probably the right choice for most applications, since it helps to
+      quickly get started with AWS services. But if you're in the
+      <a href="https://typelevel.org">Typelevel</a> ecosystem, you're probably
+      using <a href="https://http4s.org">http4s</a>, and might be wondering what
+      an alternative looks like. In this post, we'll explore
+      <a href="https://github.com/maginepro/http4s-aws">http4s-aws</a> as an
+      alternative to the AWS SDK.
+    </p>
+
+    <h2 id="motivation"><a href="#motivation">Motivation</a></h2>
+
+    <p>
+      Let's start with a motivating example. Arguably, one of the most common
+      things to do is to fetch a key from
+      <a href="https://aws.amazon.com/s3">Amazon S3</a>. If we look at the
+      <a
+        href="https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html#API_GetObject_Examples"
+        >GetObject</a
+      >
+      REST API documentation, we might think that we should be able to write
+      code like the following.
+    </p>
+
+    <pre><code><span class="line"><span style="color:#C678DD">def</span><span style="color:#61AFEF"> getObject</span><span style="color:#ABB2BF">(</span><span style="color:#E06C75;font-style:italic">client</span><span style="color:#ABB2BF">: </span><span style="color:#E5C07B">Client</span><span style="color:#ABB2BF">[</span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">]): </span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">[</span><span style="color:#E5C07B">String</span><span style="color:#ABB2BF">] </span><span style="color:#56B6C2">=</span></span>
+<span class="line"><span style="color:#C678DD">  for</span><span style="color:#ABB2BF"> {</span></span>
+<span class="line"><span style="color:#ABB2BF">    uri &lt;- </span><span style="color:#E5C07B">Uri</span><span style="color:#ABB2BF">.fromString(</span><span style="color:#C678DD">s</span><span style="color:#98C379">"https://</span><span style="color:#C678DD">$</span><span style="color:#ABB2BF">bucket</span><span style="color:#98C379">.s3.</span><span style="color:#C678DD">$</span><span style="color:#ABB2BF">region</span><span style="color:#98C379">.amazonaws.com/</span><span style="color:#C678DD">$</span><span style="color:#ABB2BF">key</span><span style="color:#98C379">"</span><span style="color:#ABB2BF">).liftTo[</span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">]</span></span>
+<span class="line"><span style="color:#ABB2BF">    contents &lt;- client.expect[</span><span style="color:#E5C07B">String</span><span style="color:#ABB2BF">](</span><span style="color:#E5C07B">Request</span><span style="color:#ABB2BF">(</span><span style="color:#E5C07B">Method</span><span style="color:#ABB2BF">.</span><span style="color:#E5C07B">GET</span><span style="color:#ABB2BF">, uri))</span></span>
+<span class="line"><span style="color:#ABB2BF">  } </span><span style="color:#C678DD">yield</span><span style="color:#ABB2BF"> contents</span></span></code></pre>
+    <p>
+      If we're using http4s-aws, this is in fact exactly what we can do (if we
+      remember
+      <a
+        href="https://github.com/maginepro/http4s-aws/blob/88c2aeb3866891e3f94dcb3e49186c78dbf300cf/modules/s3/shared/src/main/scala/com/magine/http4s/aws/s3/S3Key.scala"
+        >key encoding</a
+      >). The thing missing in the example is the
+      <code>Authorization</code> header. And that is what http4s-aws provides.
+      In using the <code>AwsSigningClient</code> middleware, we get a
+      <code>Client</code> which deals with the signing logic and the rest mostly
+      works like you would expect, including streaming response bodies.
+    </p>
+
+    <p>Using <code>AwsSigningClient</code> is fairly straightforward:</p>
+
+    <pre><code><span class="line"><span style="color:#C678DD">val</span><span style="color:#E06C75"> client</span><span style="color:#ABB2BF">: </span><span style="color:#E5C07B">Resource</span><span style="color:#ABB2BF">[</span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">, </span><span style="color:#E5C07B">Client</span><span style="color:#ABB2BF">[</span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">]] </span><span style="color:#56B6C2">=</span></span>
+<span class="line"><span style="color:#C678DD">  for</span><span style="color:#ABB2BF"> {</span></span>
+<span class="line"><span style="color:#ABB2BF">    client &#x3C;- </span><span style="color:#E5C07B">EmberClientBuilder</span><span style="color:#ABB2BF">.default[</span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">].build</span></span>
+<span class="line"><span style="color:#ABB2BF">    provider &#x3C;- </span><span style="color:#E5C07B">CredentialsProvider</span><span style="color:#ABB2BF">.default[</span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">]</span></span>
+<span class="line"><span style="color:#ABB2BF">  } </span><span style="color:#C678DD">yield</span><span style="color:#E5C07B"> AwsSigningClient</span><span style="color:#ABB2BF">(provider, </span><span style="color:#E5C07B">Region</span><span style="color:#ABB2BF">.</span><span style="color:#E5C07B">EU_WEST_1</span><span style="color:#ABB2BF">, </span><span style="color:#E5C07B">AwsServiceName</span><span style="color:#ABB2BF">.</span><span style="color:#E5C07B">S3</span><span style="color:#ABB2BF">)(client)</span></span></code></pre>
+    <p>
+      while the credentials to use are managed by the
+      <a
+        href="https://github.com/maginepro/http4s-aws/blob/f72a51ad75be06fabecb6409846a58afde776bfc/modules/core/shared/src/main/scala/com/magine/http4s/aws/CredentialsProvider.scala#L368-L410"
+        ><code>CredentialsProvider</code></a
+      >. What if we want to store objects in Amazon S3? Again, looking at the
+      <a
+        href="https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutObject.html#API_PutObject_Examples"
+        >PutObject</a
+      >
+      REST API documentation, we might want to write something along the
+      following lines.
+    </p>
+
+    <pre><code><span class="line"><span style="color:#C678DD">def</span><span style="color:#61AFEF"> putObject</span><span style="color:#ABB2BF">(</span><span style="color:#E06C75;font-style:italic">client</span><span style="color:#ABB2BF">: </span><span style="color:#E5C07B">Client</span><span style="color:#ABB2BF">[</span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">]): </span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">[</span><span style="color:#E5C07B">Unit</span><span style="color:#ABB2BF">] </span><span style="color:#56B6C2">=</span></span>
+<span class="line"><span style="color:#C678DD">  for</span><span style="color:#ABB2BF"> {</span></span>
+<span class="line"><span style="color:#ABB2BF">    uri &lt;- </span><span style="color:#E5C07B">Uri</span><span style="color:#ABB2BF">.fromString(</span><span style="color:#C678DD">s</span><span style="color:#98C379">"https://</span><span style="color:#C678DD">$</span><span style="color:#ABB2BF">bucket</span><span style="color:#98C379">.s3.</span><span style="color:#C678DD">$</span><span style="color:#ABB2BF">region</span><span style="color:#98C379">.amazonaws.com/</span><span style="color:#C678DD">$</span><span style="color:#ABB2BF">key</span><span style="color:#98C379">"</span><span style="color:#ABB2BF">).liftTo[</span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">]</span></span>
+<span class="line"><span style="color:#ABB2BF">    _ &lt;- client.expect[</span><span style="color:#E5C07B">Unit</span><span style="color:#ABB2BF">](</span><span style="color:#E5C07B">Request</span><span style="color:#ABB2BF">(</span><span style="color:#E5C07B">Method</span><span style="color:#ABB2BF">.</span><span style="color:#E5C07B">PUT</span><span style="color:#ABB2BF">, uri).withEntity(content))</span></span>
+<span class="line"><span style="color:#ABB2BF">  } </span><span style="color:#C678DD">yield</span><span style="color:#ABB2BF"> ()</span></span></code></pre>
+    <p>
+      Again, this works like you would expect. If we want to stream the request
+      body, http4s-aws also implements
+      <a
+        href="https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-streaming.html"
+        >signed chunked uploads</a
+      >. Assuming you know the length of the request body, it is possible to do
+      something like the following to upload the request body in chunks.
+    </p>
+
+    <pre><code><span class="line"><span style="color:#E5C07B">Request</span><span style="color:#ABB2BF">[</span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">](</span><span style="color:#E5C07B">Method</span><span style="color:#ABB2BF">.</span><span style="color:#E5C07B">PUT</span><span style="color:#ABB2BF">, uri)</span></span>
+<span class="line"><span style="color:#ABB2BF">  .withHeaders(</span></span>
+<span class="line"><span style="color:#ABB2BF">    contentType,</span></span>
+<span class="line"><span style="color:#ABB2BF">    `Transfer-Encoding`(</span><span style="color:#E5C07B">TransferCoding</span><span style="color:#ABB2BF">.chunked),</span></span>
+<span class="line"><span style="color:#ABB2BF">    `X-Amz-Decoded-Content-Length`(contentLength)</span></span>
+<span class="line"><span style="color:#ABB2BF">  )</span></span>
+<span class="line"><span style="color:#ABB2BF">  .withBodyStream(content)</span></span></code></pre>
+
+    <p>
+      And if that is not enough, the http4s-aws-s3 module also implements
+      <a href="https://github.com/maginepro/http4s-aws?tab=readme-ov-file#s3"
+        >multipart uploads</a
+      >. There's also support for
+      <a
+        href="https://github.com/maginepro/http4s-aws?tab=readme-ov-file#pre-signing"
+        >pre-signing requests</a
+      >, which can be useful when deferring the upload to later on.
+    </p>
+
+    <h2 id="benefits"><a href="#benefits">Benefits</a></h2>
+
+    <p>
+      At this point, you might think "that looks nice and all, but using the AWS
+      SDK for Java is not so bad". It might be helpful to remind ourselves how a
+      <code>GetObject</code> request looks like with the AWS SDK for Java. Note
+      that it's possible to hide this kind of code in a library (<a
+        href="https://github.com/rewards-network/pure-aws"
+        >pure-aws</a
+      >
+      is an example).
+    </p>
+
+    <pre><code><span class="line"><span style="color:#C678DD">val</span><span style="color:#E06C75"> client</span><span style="color:#ABB2BF">: </span><span style="color:#E5C07B">Resource</span><span style="color:#ABB2BF">[</span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">, </span><span style="color:#E5C07B">S3AsyncClient</span><span style="color:#ABB2BF">] </span><span style="color:#56B6C2">=</span></span>
+<span class="line"><span style="color:#E5C07B">  Resource</span><span style="color:#ABB2BF">.fromAutoCloseable(</span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">(</span><span style="color:#E5C07B">S3AsyncClient</span><span style="color:#ABB2BF">.builder().region(region).build()))</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#C678DD">def</span><span style="color:#61AFEF"> getObject</span><span style="color:#ABB2BF">(</span><span style="color:#E06C75;font-style:italic">client</span><span style="color:#ABB2BF">: </span><span style="color:#E5C07B">Client</span><span style="color:#ABB2BF">[</span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">]): </span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">[</span><span style="color:#E5C07B">GetObjectResponse</span><span style="color:#ABB2BF">] </span><span style="color:#56B6C2">=</span><span style="color:#ABB2BF"> {</span></span>
+<span class="line"><span style="color:#C678DD">  val</span><span style="color:#E06C75"> request</span><span style="color:#56B6C2"> =</span><span style="color:#E5C07B"> GetObjectRequest</span><span style="color:#ABB2BF">.builder().bucket(bucket).key(key).build()</span></span>
+<span class="line"><span style="color:#E5C07B">  IO</span><span style="color:#ABB2BF">.fromCompletableFuture(</span><span style="color:#E5C07B">IO</span><span style="color:#ABB2BF">(client.getObject(request, </span><span style="color:#E5C07B">AsyncResponseTransformer</span><span style="color:#ABB2BF">.toBytes[</span><span style="color:#E5C07B">GetObjectResponse</span><span style="color:#ABB2BF">]())))</span></span>
+<span class="line"><span style="color:#ABB2BF">}</span></span></code></pre>
+
+    <p>
+      The example above doesn't deal with streaming or decoding of the response
+      body, but gives you an idea of how a request works. Let's try to break
+      down why you might not want to use the AWS SDK for Java, and what you get
+      by instead using http4s-aws.
+    </p>
+
+    <ol>
+      <li>
+        There is no dependency on <a href="https://netty.io">Netty</a> (or other
+        <a
+          href="https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/http-configuration.html"
+          >HTTP clients</a
+        >). Meaning we can just use our existing http4s client and cats-effect
+        runtime, without also bringing the Netty runtime.
+      </li>
+      <li>
+        The streaming nature of http4s means we get support for streaming
+        response bodies without additional effort, and streaming request bodies
+        by just adding a couple of additional headers.
+      </li>
+      <li>
+        The
+        <a
+          href="https://github.com/maginepro/http4s-aws/blob/f72a51ad75be06fabecb6409846a58afde776bfc/modules/core/shared/src/main/scala/com/magine/http4s/aws/CredentialsProvider.scala"
+          ><code>CredentialsProvider</code></a
+        >
+        is implemented in a non-blocking fashion on top of cats-effect and
+        http4s and the
+        <a
+          href="https://github.com/maginepro/http4s-aws/blob/f72a51ad75be06fabecb6409846a58afde776bfc/modules/core/shared/src/main/scala/com/magine/http4s/aws/CredentialsProvider.scala#L368-L410"
+          >default</a
+        >
+        supports most credential sources, like the AWS SDK. There is also an
+        <a
+          href="https://github.com/maginepro/http4s-aws/blob/f72a51ad75be06fabecb6409846a58afde776bfc/modules/core/shared/src/main/scala/com/magine/http4s/aws/CredentialsProvider.scala#L459-L523"
+          >integration</a
+        >
+        with the
+        <a
+          href="https://docs.aws.amazon.com/STS/latest/APIReference/welcome.html"
+          >Security Token Service (STS)</a
+        >
+        and <a href="https://aws.amazon.com/cli/">AWS CLI</a> for writing CLI
+        applications.
+      </li>
+      <li>
+        Since http4s-aws mostly deals with signing and credential management,
+        you are still largely in control of requests and responses. While
+        support for more complex interactions (multipart uploads) is provided,
+        it's optional, for convenience, and built on-top of the same core
+        library.
+      </li>
+      <li>
+        There is already support for
+        <a href="https://www.graalvm.org/latest/reference-manual/native-image/"
+          >GraalVM Native Image</a
+        >
+        and <a href="https://www.scala-js.org/">Scala.js</a>. Similarly, support
+        for <a href="https://scala-native.org/en/latest/">Scala Native</a> will
+        be available once cats-effect and other downstream libraries (fs2 and
+        http4s) are available for Scala Native.
+      </li>
+    </ol>
+
+    <h2 id="conclusion"><a href="#conclusion">Conclusion</a></h2>
+
+    <p>
+      While http4s-aws is less battle-tested than the AWS SDK for Java, we're
+      successfully running many production services using it. Most services do
+      not need to access a lot of different AWS APIs, and using them is mostly
+      trivial with http4s-aws.
+    </p>
+
+    <p>
+      There can initially be a bit more effort in reading the REST API
+      documentation and implementing requests and response-handling (compared to
+      using the AWS SDK), but ultimately it provides full flexibility, leaving
+      you in control. Some of the more complex interactions, like multipart
+      uploads, are supported by the library, but you are also free to implement
+      your own variations.
+    </p>
+
+    <p>
+      Hopefully you find
+      <a href="https://github.com/maginepro/http4s-aws">http4s-aws</a> useful.
+      <a href="https://github.com/maginepro/http4s-aws/issues">Let us know</a>
+      about mistakes and ideas for improvement.
+    </p>
+  </body>
+</html>

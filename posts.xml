@@ -5,6 +5,12 @@
     <link>https://vlovgr.se</link>
     <description>Posts by Viktor Rudebeck</description>
     <item>
+      <title>A Scala Alternative to AWS SDK for Java</title>
+      <link>https://vlovgr.se/posts/http4s-aws</link>
+      <description
+      >If you're using Typelevel Scala, and http4s more specifically, http4s-aws can be a viable alternative to the AWS SDK for Java and does bring some benefits. Please give it a try and let us know if you spot any mistakes or opportunities for improvement.</description>
+    </item>
+    <item>
       <title>Unlocking the Gym with Apple Shortcuts</title>
       <link>https://vlovgr.se/posts/gym-unlock</link>
       <description
