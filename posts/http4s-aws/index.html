@@ -167,6 +167,17 @@
           >HTTP clients</a
         >). Meaning we can just use our existing http4s client and cats-effect
         runtime, without also bringing the Netty runtime.
+        <ul>
+          <li>
+            <i>Update 2025-12-16:</i> As
+            <a
+              href="https://discord.com/channels/632277896739946517/632277897448652844/1450512056926339153"
+              >Yannick reports</a
+            >, an alternative solution for avoiding Netty is to write a custom
+            HTTP client backend for the Java SDK using http4s. However, you're
+            still stuck with the same API as shown above.
+          </li>
+        </ul>
       </li>
       <li>
         The streaming nature of http4s means we get support for streaming
