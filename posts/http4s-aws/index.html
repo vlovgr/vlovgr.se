@@ -183,6 +183,23 @@
         The streaming nature of http4s means we get support for streaming
         response bodies without additional effort, and streaming request bodies
         by just adding a couple of additional headers.
+        <ul>
+          <li>
+            <i>Update 2025-12-16:</i> Like
+            <a
+              href="https://discord.com/channels/632277896739946517/632277897448652844/1450503021586026658"
+              >Anton mentions</a
+            >, the
+            <a href="https://disneystreaming.github.io/smithy4s/">smithy4s</a>
+            project can generate clients for all publicly documented AWS
+            protocols. However, S3 support including streaming is
+            <a
+              href="https://disneystreaming.github.io/smithy4s/docs/protocols/aws/aws#what-is-missing-"
+              >not supported</a
+            >, and you're less in control when relying on generated code (see
+            point 4).
+          </li>
+        </ul>
       </li>
       <li>
         The
