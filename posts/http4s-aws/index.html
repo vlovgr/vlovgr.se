@@ -22,11 +22,11 @@
       <a href="https://typelevel.org">Typelevel</a> Scala, and
       <a href="https://http4s.org">http4s</a>
       more specifically,
-      <a href="https://github.com/maginepro/http4s-aws">http4s-aws</a> can be a
+      <a href="https://github.com/vlovgr/http4s-aws">http4s-aws</a> can be a
       viable alternative to the
       <a href="https://github.com/aws/aws-sdk-java-v2">AWS SDK for Java</a> and
       does bring some <a href="#benefits">benefits</a>. Please give it a try and
-      <a href="https://github.com/maginepro/http4s-aws/issues">let us know</a>
+      <a href="https://github.com/vlovgr/http4s-aws/issues">let us know</a>
       if you spot any mistakes or opportunities for improvement.
     </p>
 
@@ -40,7 +40,7 @@
       <a href="https://typelevel.org">Typelevel</a> ecosystem, you're probably
       using <a href="https://http4s.org">http4s</a>, and might be wondering what
       an alternative looks like. In this post, we'll explore
-      <a href="https://github.com/maginepro/http4s-aws">http4s-aws</a> as an
+      <a href="https://github.com/vlovgr/http4s-aws">http4s-aws</a> as an
       alternative to the AWS SDK.
     </p>
 
@@ -67,7 +67,7 @@
       If we're using http4s-aws, this is in fact exactly what we can do (if we
       remember
       <a
-        href="https://github.com/maginepro/http4s-aws/blob/88c2aeb3866891e3f94dcb3e49186c78dbf300cf/modules/s3/shared/src/main/scala/com/magine/http4s/aws/s3/S3Key.scala"
+        href="https://github.com/vlovgr/http4s-aws/blob/88c2aeb3866891e3f94dcb3e49186c78dbf300cf/modules/s3/shared/src/main/scala/com/magine/http4s/aws/s3/S3Key.scala"
         >key encoding</a
       >). The thing missing in the example is the
       <code>Authorization</code> header. And that is what http4s-aws provides.
@@ -86,7 +86,7 @@
     <p>
       while the credentials to use are managed by the
       <a
-        href="https://github.com/maginepro/http4s-aws/blob/f72a51ad75be06fabecb6409846a58afde776bfc/modules/core/shared/src/main/scala/com/magine/http4s/aws/CredentialsProvider.scala#L368-L410"
+        href="https://github.com/vlovgr/http4s-aws/blob/f72a51ad75be06fabecb6409846a58afde776bfc/modules/core/shared/src/main/scala/com/magine/http4s/aws/CredentialsProvider.scala#L368-L410"
         ><code>CredentialsProvider</code></a
       >. What if we want to store objects in Amazon S3? Again, looking at the
       <a
@@ -122,11 +122,11 @@
 
     <p>
       And if that is not enough, the http4s-aws-s3 module also implements
-      <a href="https://github.com/maginepro/http4s-aws?tab=readme-ov-file#s3"
+      <a href="https://github.com/vlovgr/http4s-aws?tab=readme-ov-file#s3"
         >multipart uploads</a
       >. There's also support for
       <a
-        href="https://github.com/maginepro/http4s-aws?tab=readme-ov-file#pre-signing"
+        href="https://github.com/vlovgr/http4s-aws?tab=readme-ov-file#pre-signing"
         >pre-signing requests</a
       >, which can be useful when deferring the upload to later on.
     </p>
@@ -209,18 +209,18 @@
       <li>
         The
         <a
-          href="https://github.com/maginepro/http4s-aws/blob/f72a51ad75be06fabecb6409846a58afde776bfc/modules/core/shared/src/main/scala/com/magine/http4s/aws/CredentialsProvider.scala"
+          href="https://github.com/vlovgr/http4s-aws/blob/f72a51ad75be06fabecb6409846a58afde776bfc/modules/core/shared/src/main/scala/com/magine/http4s/aws/CredentialsProvider.scala"
           ><code>CredentialsProvider</code></a
         >
         is implemented in a non-blocking fashion on top of cats-effect and
         http4s and the
         <a
-          href="https://github.com/maginepro/http4s-aws/blob/f72a51ad75be06fabecb6409846a58afde776bfc/modules/core/shared/src/main/scala/com/magine/http4s/aws/CredentialsProvider.scala#L368-L410"
+          href="https://github.com/vlovgr/http4s-aws/blob/f72a51ad75be06fabecb6409846a58afde776bfc/modules/core/shared/src/main/scala/com/magine/http4s/aws/CredentialsProvider.scala#L368-L410"
           >default</a
         >
         supports most credential sources, like the AWS SDK. There is also an
         <a
-          href="https://github.com/maginepro/http4s-aws/blob/f72a51ad75be06fabecb6409846a58afde776bfc/modules/core/shared/src/main/scala/com/magine/http4s/aws/CredentialsProvider.scala#L459-L523"
+          href="https://github.com/vlovgr/http4s-aws/blob/f72a51ad75be06fabecb6409846a58afde776bfc/modules/core/shared/src/main/scala/com/magine/http4s/aws/CredentialsProvider.scala#L459-L523"
           >integration</a
         >
         with the
@@ -276,9 +276,15 @@
 
     <p>
       Hopefully you find
-      <a href="https://github.com/maginepro/http4s-aws">http4s-aws</a> useful.
-      <a href="https://github.com/maginepro/http4s-aws/issues">Let us know</a>
+      <a href="https://github.com/vlovgr/http4s-aws">http4s-aws</a> useful.
+      <a href="https://github.com/vlovgr/http4s-aws/issues">Let us know</a>
       about mistakes and ideas for improvement.
+    </p>
+
+    <p>
+      <i>Update 2026-10-20:</i> The project has a
+      <a href="https://github.com/vlovgr/http4s-aws">new home</a> on my personal
+      GitHub account.
     </p>
   </body>
 </html>
