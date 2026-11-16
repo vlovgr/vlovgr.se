@@ -5,6 +5,12 @@
     <link>https://vlovgr.se</link>
     <description>Posts by Viktor Rudebeck</description>
     <item>
+      <title>Jots: Functional JWTs for Scala</title>
+      <link>https://vlovgr.se/posts/jots</link>
+      <description
+      >This post originally appeared on the Typelevel Blog and is reproduced here verbatim. I'll be doing a live coding introduction to the Jots library at the next Typelevel Virtual Meetup on Friday November 20th.</description>
+    </item>
+    <item>
       <title>A Scala Alternative to AWS SDK for Java</title>
       <link>https://vlovgr.se/posts/http4s-aws</link>
       <description
