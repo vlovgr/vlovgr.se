@@ -7,32 +7,53 @@
     <item>
       <title>Jots: Functional JWTs for Scala</title>
       <link>https://vlovgr.se/posts/jots</link>
-      <description
-      >This post originally appeared on the Typelevel Blog and is reproduced here verbatim. I'll be doing a live coding introduction to the Jots library at the next Typelevel Virtual Meetup on Friday November 20th.</description>
+      <description>
+        This post originally appeared on the Typelevel Blog and is reproduced
+        here verbatim. I'll be doing a live coding introduction to the Jots
+        library at the next Typelevel Virtual Meetup on Friday November 20th.
+      </description>
     </item>
     <item>
       <title>A Scala Alternative to AWS SDK for Java</title>
       <link>https://vlovgr.se/posts/http4s-aws</link>
-      <description
-      >If you're using Typelevel Scala, and http4s more specifically, http4s-aws can be a viable alternative to the AWS SDK for Java and does bring some benefits. Please give it a try and let us know if you spot any mistakes or opportunities for improvement.</description>
+      <description>
+        If you're using Typelevel Scala, and http4s more
+        specifically, http4s-aws can be a viable alternative to the AWS SDK for
+        Java and does bring some benefits. Please give it a try and let us know
+        if you spot any mistakes or opportunities for improvement.
+      </description>
     </item>
     <item>
       <title>Unlocking the Gym with Apple Shortcuts</title>
       <link>https://vlovgr.se/posts/gym-unlock</link>
-      <description
-      >Accessing my local gym requires a smartphone application, scanning two QR codes, and granting location permissions. I've figured out the unlocking mechanism and used Apple Shortcuts to unlock the gym doors with a single tap. This completely bypasses the application, and does not require me to reveal my actual location.</description>
+      <description>
+        Accessing my local gym requires a smartphone application, scanning two
+        QR codes, and granting location permissions. I've figured out the
+        unlocking mechanism and used Apple Shortcuts to unlock the gym doors
+        with a single tap. This completely bypasses the application, and does
+        not require me to reveal my actual location.
+      </description>
     </item>
     <item>
       <title>Static Sites without Static Site Generators</title>
       <link>https://vlovgr.se/posts/static-sites</link>
-      <description
-      >If you have a small website, like a personal blog, you might not need a static site generator. Writing plain HTML and CSS works reasonably well. And maintaining consistency is easy for a small site. It's even straightforward to write and update a minimal RSS feed. By keeping the technical details to a minimum, we can instead focus on the writing.</description>
+      <description>
+        If you have a small website, like a personal blog, you might not need a
+        static site generator. Writing plain HTML and CSS works reasonably
+        well. And maintaining consistency is easy for a small site. It's even
+        straightforward to write and update a minimal RSS feed. By keeping the
+        technical details to a minimum, we can instead focus on the writing.
+      </description>
     </item>
     <item>
       <title>Generating Images of Nushell Commands</title>
       <link>https://vlovgr.se/posts/nu-shiki</link>
-      <description
-      >I've written a small nu-shiki script for generating nice images of Nushell commands with their outputs. It can also be used to render images of code in any language supported by Shiki. It's useful when sharing images of code is the best available option.</description>
+      <description>
+        I've written a small nu-shiki script for generating nice images of
+        Nushell commands with their outputs. It can also be used to render
+        images of code in any language supported by Shiki. It's useful when
+        sharing images of code is the best available option.
+      </description>
     </item>
   </channel>
 </rss>

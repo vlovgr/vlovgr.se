@@ -17,125 +17,80 @@
 
     <i>Published on November 16, 2026.</i>
 
+    <!-- prettier-ignore -->
     <p>
-      <em
-        >This post originally appeared on the
-        <a href="https://typelevel.org/blog/jots.html">Typelevel Blog</a> and is
-        reproduced here verbatim. I'll be doing a live coding introduction to
-        the <a href="https://vlovgr.github.io/jots">Jots</a> library at the next
-        Typelevel Virtual Meetup on Friday November 20th. See the Discord
-        <a
-          href="https://discord.com/channels/632277896739946517/839271401046278154/1570492410536923180"
-          >announcement</a
-        >
-        for details. You can join the Typelevel Discord with this
-        <a href="https://discord.gg/6jecKqNzPB">invite</a>.</em
-      >
+      <em>This post originally appeared on the <a href="https://typelevel.org/blog/jots.html">Typelevel Blog</a> and is
+      reproduced here verbatim. I'll be doing a live coding introduction to the
+      <a href="https://vlovgr.github.io/jots">Jots</a> library at the next Typelevel Virtual Meetup on Friday November
+      20th. See the Discord
+      <a href="https://discord.com/channels/632277896739946517/839271401046278154/1570492410536923180">announcement</a>
+      for details. You can join the Typelevel Discord with this <a href="https://discord.gg/6jecKqNzPB">invite</a>.</em>
     </p>
 
     <div class="separator"></div>
 
     <p>
       I am happy to announce that my library
-      <a href="https://vlovgr.github.io/jots">Jots</a> has been accepted as a
-      Typelevel affiliate project.
+      <a href="https://vlovgr.github.io/jots">Jots</a> has been accepted as a Typelevel affiliate project.
     </p>
 
     <img src="preview.png">
 
     <p>
       Jots is a library for working with
-      <a href="https://en.wikipedia.org/wiki/JSON_Web_Token"
-        >JSON Web Tokens (JWTs)</a
-      >
+      <a href="https://en.wikipedia.org/wiki/JSON_Web_Token">JSON Web Tokens (JWTs)</a>
       in Scala, Scala.js and Scala Native.
     </p>
 
     <ul>
       <li>
         Supports token signing and verification, including with
-        <a
-          href="https://vlovgr.github.io/jots/features/signing.html#json-web-key"
-          >JSON Web Keys (JWKs)</a
-        >
+        <a href="https://vlovgr.github.io/jots/features/signing.html#json-web-key">JSON Web Keys (JWKs)</a>
         and
-        <a
-          href="https://vlovgr.github.io/jots/features/verification.html#json-web-key-set"
-          >JWK Sets</a
-        >.
+        <a href="https://vlovgr.github.io/jots/features/verification.html#json-web-key-set">JWK Sets</a>.
       </li>
       <li>
         Integrates with
-        <a href="https://vlovgr.github.io/jots/integrations/http4s.html"
-          >http4s</a
-        >
-        for <code>AuthMiddleware</code> verification and periodically refreshing
-        JWK Sets.
+        <a href="https://vlovgr.github.io/jots/integrations/http4s.html">http4s</a>
+        for <code>AuthMiddleware</code> verification and periodically refreshing JWK Sets.
       </li>
-      <li>
-        Uses the Cats Effect, Circe, Literally and scodec-bits Typelevel
-        libraries in the core module.
-      </li>
+      <li>Uses the Cats Effect, Circe, Literally and scodec-bits Typelevel libraries in the core module.</li>
     </ul>
 
     <h2>Cryptography</h2>
 
     <p>
       Token signing and verification are built on an independent
-      <a href="https://vlovgr.github.io/jots/features/cryptography.html"
-        ><code>jots-crypto</code></a
-      >
+      <a href="https://vlovgr.github.io/jots/features/cryptography.html"><code>jots-crypto</code></a>
       module.
     </p>
 
     <ul>
       <li>
-        Provides a <code>Crypto[F]</code> capability for effect types with a
-        <code>Sync</code> instance, like <code>IO</code> and
-        <code>SyncIO</code>.
+        Provides a <code>Crypto[F]</code> capability for effect types with a <code>Sync</code> instance, like
+        <code>IO</code> and <code>SyncIO</code>.
       </li>
-      <li>
-        Supports HMAC, plus signing and verification using ECDSA, EdDSA and RSA
-        algorithms.
-      </li>
-      <li>
-        Uses Java cryptography on the JVM, Node.js on Scala.js and OpenSSL on
-        Scala Native.
-      </li>
-      <li>
-        Includes a <code>String</code> interpolator for public keys, which are
-        validated at compile time.
-      </li>
+      <li>Supports HMAC, plus signing and verification using ECDSA, EdDSA and RSA algorithms.</li>
+      <li>Uses Java cryptography on the JVM, Node.js on Scala.js and OpenSSL on Scala Native.</li>
+      <li>Includes a <code>String</code> interpolator for public keys, which are validated at compile time.</li>
     </ul>
 
-    <p>
-      The module can be used on its own when you need cross-platform
-      cryptography.
-    </p>
+    <p>The module can be used on its own when you need cross-platform cryptography.</p>
 
     <h2>Testing</h2>
 
     <p>
       The
-      <a href="https://vlovgr.github.io/jots/features/testing.html"
-        ><code>jots-testing</code></a
-      >
+      <a href="https://vlovgr.github.io/jots/features/testing.html"><code>jots-testing</code></a>
       module helps with writing tests for code using the library.
     </p>
 
     <ul>
+      <li>Provides ScalaCheck generators and <code>Arbitrary</code> instances for tokens, keys, JWKs and more.</li>
       <li>
-        Provides ScalaCheck generators and <code>Arbitrary</code> instances for
-        tokens, keys, JWKs and more.
+        Adds <code>String</code> interpolators for private keys, secret keys and tokens, validated at compile time.
       </li>
-      <li>
-        Adds <code>String</code> interpolators for private keys, secret keys and
-        tokens, validated at compile time.
-      </li>
-      <li>
-        Allows tests to bypass signature verification, which is something the
-        core module prevents.
-      </li>
+      <li>Allows tests to bypass signature verification, which is something the core module prevents.</li>
     </ul>
 
     <h2>Getting Started</h2>

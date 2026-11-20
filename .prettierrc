@@ -1,3 +1,7 @@
 {
-  "plugins": ["@awmottaz/prettier-plugin-void-html", "@prettier/plugin-xml"]
+  "plugins": ["@awmottaz/prettier-plugin-void-html", "@prettier/plugin-xml"],
+  "overrides": [
+    { "files": "*.html", "options": { "printWidth": 120 } },
+    { "files": "*.xml", "options": { "xmlWhitespaceSensitivity": "ignore" } }
+  ]
 }
